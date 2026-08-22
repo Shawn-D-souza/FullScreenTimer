@@ -3,7 +3,9 @@ import { useStore } from '../../store/useStore'
 import { useGhostUI } from '../../hooks/useGhostUI'
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Play, Pause, RotateCcw, Flag } from 'lucide-react'
 
+// ... existing formatTime ...
 function formatTime(ms: number) {
   const totalSeconds = Math.floor(ms / 1000)
   const hours = Math.floor(totalSeconds / 3600)
@@ -80,9 +82,12 @@ export function Stopwatch() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
-      <div className="text-[min(14vw,65vh)] leading-none font-bold tracking-tighter tabular-nums z-10">
+      <button 
+        onClick={handleStartPause}
+        className="text-[min(14vw,65vh)] leading-none font-bold tracking-tighter tabular-nums z-10 outline-none hover:opacity-80"
+      >
         {formatTime(elapsed)}
-      </div>
+      </button>
 
       <AnimatePresence>
         {isVisible && laps.length > 0 && (
@@ -102,6 +107,27 @@ export function Stopwatch() {
                 </div>
               )
             })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+            className="absolute top-[15%] flex gap-8 pointer-events-auto"
+          >
+            <button onClick={handleStartPause} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
+              {isRunning ? <Pause size={32} /> : <Play size={32} />}
+            </button>
+            <button onClick={handleLap} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Lap (L)">
+              <Flag size={32} />
+            </button>
+            <button onClick={handleReset} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
+              <RotateCcw size={32} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

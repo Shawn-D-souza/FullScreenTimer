@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { useStore } from '../../store/useStore'
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
 import { useAlerts } from '../../hooks/useAlerts'
+import { useGhostUI } from '../../hooks/useGhostUI'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Play, Pause, RotateCcw } from 'lucide-react'
 
 type Phase = 'work' | 'break'
 
@@ -22,6 +25,7 @@ function formatTime(ms: number) {
 export function Flowmodoro() {
   const { activeMode, flowmodoroSettings } = useStore()
   const { triggerAlert } = useAlerts()
+  const { isVisible } = useGhostUI()
   const isActive = activeMode === 'Flowmodoro'
 
   const [phase, setPhase] = useState<Phase>('work')
@@ -146,15 +150,36 @@ export function Flowmodoro() {
         {phase === 'work' ? (isRunning ? 'Flowing' : '') : 'Break'}
       </div>
       
-      <div className={`text-[min(18vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 ${time === 0 && phase === 'break' ? 'opacity-20' : 'opacity-100'}`}>
+      <button 
+        onClick={handleStartPause}
+        className={`text-[min(18vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 outline-none hover:opacity-80 ${time === 0 && phase === 'break' ? 'opacity-20' : 'opacity-100'}`}
+      >
         {displayTime}
-      </div>
+      </button>
 
       {phase === 'work' && !isRunning && time > 0 && (
         <div className="mt-8 text-sm opacity-50 font-sans">
           Press Space to calculate break (Focused / 5)
         </div>
       )}
+
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+            className="absolute bottom-[15%] flex gap-8 pointer-events-auto"
+          >
+            <button onClick={handleStartPause} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
+              {isRunning ? <Pause size={32} /> : <Play size={32} />}
+            </button>
+            <button onClick={handleReset} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
+              <RotateCcw size={32} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
