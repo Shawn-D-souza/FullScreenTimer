@@ -121,7 +121,7 @@ export function Timer() {
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
       <button 
         onClick={handleStartPause}
-        className={`text-[min(28vw,75vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
+        className={`text-[min(28vw,75vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
       >
         {formatTime(timeLeft)}
       </button>

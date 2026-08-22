@@ -147,7 +147,7 @@ export function Pomodoro() {
       
       <button 
         onClick={handleStartPause}
-        className={`text-[min(25vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
+        className={`text-[min(25vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
       >
         {formatTime(timeLeft)}
       </button>

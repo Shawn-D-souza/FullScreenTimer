@@ -152,7 +152,7 @@ export function Flowmodoro() {
       
       <button 
         onClick={handleStartPause}
-        className={`text-[min(18vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 outline-none hover:opacity-80 ${time === 0 && phase === 'break' ? 'opacity-20' : 'opacity-100'}`}
+        className={`text-[min(18vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${time === 0 && phase === 'break' ? 'opacity-20' : 'opacity-100'}`}
       >
         {displayTime}
       </button>
