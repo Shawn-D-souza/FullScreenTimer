@@ -76,6 +76,7 @@ export function Settings({ onClose }: SettingsProps) {
               <div className="flex justify-between border-b border-black/10 dark:border-white/10 py-2"><span>Previous Mode</span> <kbd>Shift+Tab</kbd></div>
               <div className="flex justify-between border-b border-black/10 dark:border-white/10 py-2"><span>Settings</span> <kbd>S</kbd></div>
               <div className="flex justify-between border-b border-black/10 dark:border-white/10 py-2"><span>Toggle Theme</span> <kbd>D</kbd></div>
+              <div className="flex justify-between border-b border-black/10 dark:border-white/10 py-2"><span>Toggle Fullscreen</span> <kbd>F</kbd></div>
               <div className="flex justify-between border-b border-black/10 dark:border-white/10 py-2"><span>Add Lap (Stopwatch)</span> <kbd>L</kbd></div>
               <div className="flex justify-between border-b border-black/10 dark:border-white/10 py-2"><span>Shortcuts</span> <kbd>?</kbd></div>
             </div>

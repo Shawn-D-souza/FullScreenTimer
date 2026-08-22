@@ -7,6 +7,7 @@ interface ShortcutHandlers {
   onL?: () => void
   onS?: () => void
   onQuestion?: () => void
+  onF?: () => void
 }
 
 export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
@@ -38,6 +39,10 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
           break
         case '?':
           handlers.onQuestion?.()
+          break
+        case 'f':
+        case 'F':
+          handlers.onF?.()
           break
         case 'd':
         case 'D':

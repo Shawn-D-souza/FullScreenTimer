@@ -2,15 +2,17 @@ import type { ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGhostUI } from '../hooks/useGhostUI'
 import { useStore } from '../store/useStore'
-import { Settings as SettingsIcon, Volume2, VolumeX, Keyboard } from 'lucide-react'
+import { Settings as SettingsIcon, Volume2, VolumeX, Keyboard, Maximize, Minimize } from 'lucide-react'
 
 interface GhostUIProps {
   children?: ReactNode
   onOpenSettings: () => void
   onOpenShortcuts?: () => void
+  isFullscreen?: boolean
+  onToggleFullscreen?: () => void
 }
 
-export function GhostUI({ children, onOpenSettings, onOpenShortcuts }: GhostUIProps) {
+export function GhostUI({ children, onOpenSettings, onOpenShortcuts, isFullscreen, onToggleFullscreen }: GhostUIProps) {
   const { isVisible } = useGhostUI()
   const { globalMute, setGlobalMute } = useStore()
 
@@ -30,6 +32,15 @@ export function GhostUI({ children, onOpenSettings, onOpenShortcuts }: GhostUIPr
           </div>
 
           <div className="pointer-events-auto absolute bottom-8 right-8 flex flex-col gap-4">
+            {onToggleFullscreen && (
+              <button 
+                onClick={onToggleFullscreen}
+                className="p-3 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                title="Toggle Fullscreen (F)"
+              >
+                {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
+              </button>
+            )}
             <button 
               onClick={() => setGlobalMute(!globalMute)}
               className="p-3 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"

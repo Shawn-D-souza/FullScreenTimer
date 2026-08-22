@@ -9,11 +9,13 @@ import { Timer } from './components/modes/Timer'
 import { Pomodoro } from './components/modes/Pomodoro'
 import { Flowmodoro } from './components/modes/Flowmodoro'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
+import { useFullscreen } from './hooks/useFullscreen'
 import { AnimatePresence } from 'framer-motion'
 
 function App() {
   const { theme, activeMode } = useStore()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const { isFullscreen, toggleFullscreen } = useFullscreen()
 
   // Apply dark mode to HTML tag for Tailwind
   useEffect(() => {
@@ -41,6 +43,7 @@ function App() {
   useKeyboardShortcuts({
     onS: () => setIsSettingsOpen(true),
     onQuestion: () => setIsSettingsOpen(true),
+    onF: toggleFullscreen,
   })
 
   const renderActiveMode = () => {
@@ -64,7 +67,11 @@ function App() {
 
       {/* The ghost UI layer */}
       {!isSettingsOpen && (
-        <GhostUI onOpenSettings={() => setIsSettingsOpen(true)}>
+        <GhostUI 
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={toggleFullscreen}
+        >
           <ModeSwitcher />
         </GhostUI>
       )}
