@@ -141,7 +141,7 @@ export function Pomodoro() {
         {phase === 'work' ? 'Focus' : phase === 'shortBreak' ? 'Short Break' : 'Long Break'}
       </div>
       
-      <div className={`text-[15vw] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}>
+      <div className={`text-[min(25vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}>
         {formatTime(timeLeft)}
       </div>
 

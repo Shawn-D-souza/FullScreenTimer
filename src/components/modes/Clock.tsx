@@ -25,7 +25,7 @@ export function Clock() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono">
-      <div className="text-[15vw] leading-none font-bold tracking-tighter tabular-nums">
+      <div className="text-[min(18vw,75vh)] leading-none font-bold tracking-tighter tabular-nums">
         {timeString}
       </div>
     </div>

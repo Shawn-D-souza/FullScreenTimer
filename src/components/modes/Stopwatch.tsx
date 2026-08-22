@@ -80,7 +80,7 @@ export function Stopwatch() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
-      <div className="text-[12vw] leading-none font-bold tracking-tighter tabular-nums z-10">
+      <div className="text-[min(14vw,65vh)] leading-none font-bold tracking-tighter tabular-nums z-10">
         {formatTime(elapsed)}
       </div>
 

@@ -117,7 +117,7 @@ export function Timer() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
-      <div className={`text-[15vw] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}>
+      <div className={`text-[min(28vw,75vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}>
         {formatTime(timeLeft)}
       </div>
 

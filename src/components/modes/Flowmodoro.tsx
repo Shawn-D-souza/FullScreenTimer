@@ -146,7 +146,7 @@ export function Flowmodoro() {
         {phase === 'work' ? (isRunning ? 'Flowing' : '') : 'Break'}
       </div>
       
-      <div className={`text-[12vw] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 ${time === 0 && phase === 'break' ? 'opacity-20' : 'opacity-100'}`}>
+      <div className={`text-[min(18vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-1000 ${time === 0 && phase === 'break' ? 'opacity-20' : 'opacity-100'}`}>
         {displayTime}
       </div>
 
