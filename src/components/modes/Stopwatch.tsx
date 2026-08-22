@@ -82,12 +82,35 @@ export function Stopwatch() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
-      <button 
-        onClick={handleStartPause}
-        className="text-[min(14vw,65vh)] leading-none font-bold tracking-tighter tabular-nums z-10 outline-none hover:opacity-80"
-      >
-        {formatTime(elapsed)}
-      </button>
+      <div className="relative flex flex-col items-center justify-center w-full">
+        <button 
+          onClick={handleStartPause}
+          className="text-[min(14vw,55vh)] leading-none font-bold tracking-tighter tabular-nums z-10 outline-none hover:opacity-80"
+        >
+          {formatTime(elapsed)}
+        </button>
+
+        <AnimatePresence>
+          {isVisible && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+              className="absolute top-full mt-8 flex gap-4 md:gap-8 pointer-events-auto"
+            >
+              <button onClick={handleStartPause} className="p-3 md:p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
+                {isRunning ? <Pause className="w-6 h-6 md:w-8 md:h-8" /> : <Play className="w-6 h-6 md:w-8 md:h-8" />}
+              </button>
+              <button onClick={handleLap} className="p-3 md:p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Lap (L)">
+                <Flag className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+              <button onClick={handleReset} className="p-3 md:p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
+                <RotateCcw className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <AnimatePresence>
         {isVisible && laps.length > 0 && (
@@ -95,39 +118,18 @@ export function Stopwatch() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10, transition: { duration: 0.8, ease: "easeInOut" } }}
-            className="absolute top-[65%] max-h-[25vh] overflow-y-auto w-full max-w-md scrollbar-hide text-center opacity-50"
+            className="absolute top-[75%] max-h-[20vh] overflow-y-auto w-full max-w-md scrollbar-hide text-center opacity-50 px-4"
           >
             {laps.map((lap, index) => {
               const lapDiff = index === laps.length - 1 ? lap : lap - laps[index + 1]
               return (
-                <div key={index} className="flex justify-between text-xl py-2 border-b border-black/10 dark:border-white/10 last:border-0 tabular-nums">
+                <div key={index} className="flex justify-between text-sm md:text-xl py-2 border-b border-black/10 dark:border-white/10 last:border-0 tabular-nums">
                   <span className="opacity-50">Lap {laps.length - index}</span>
                   <span>{formatTime(lapDiff)}</span>
                   <span className="opacity-50">{formatTime(lap)}</span>
                 </div>
               )
             })}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isVisible && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
-            className="absolute top-[15%] flex gap-8 pointer-events-auto"
-          >
-            <button onClick={handleStartPause} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
-              {isRunning ? <Pause size={32} /> : <Play size={32} />}
-            </button>
-            <button onClick={handleLap} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Lap (L)">
-              <Flag size={32} />
-            </button>
-            <button onClick={handleReset} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
-              <RotateCcw size={32} />
-            </button>
           </motion.div>
         )}
       </AnimatePresence>

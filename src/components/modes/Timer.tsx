@@ -119,51 +119,53 @@ export function Timer() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
-      <button 
-        onClick={handleStartPause}
-        className={`text-[min(28vw,75vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
-      >
-        {formatTime(timeLeft)}
-      </button>
+      <div className="relative flex flex-col items-center justify-center w-full">
+        <button 
+          onClick={handleStartPause}
+          className={`text-[min(24vw,60vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
+        >
+          {formatTime(timeLeft)}
+        </button>
 
-      <AnimatePresence>
-        {isVisible && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10, transition: { duration: 0.8, ease: "easeInOut" } }}
-            className="absolute top-[20%] flex gap-4 pointer-events-auto"
-          >
-            {PRESETS.map((m) => (
-              <button
-                key={m}
-                onClick={() => handlePreset(m)}
-                className="px-4 py-2 rounded-full border border-black/20 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-sans text-sm font-medium"
-              >
-                {m}m
+        <AnimatePresence>
+          {isVisible && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10, transition: { duration: 0.8, ease: "easeInOut" } }}
+              className="absolute bottom-full mb-8 flex flex-wrap justify-center gap-2 md:gap-4 pointer-events-auto"
+            >
+              {PRESETS.map((m) => (
+                <button
+                  key={m}
+                  onClick={() => handlePreset(m)}
+                  className="px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-black/20 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-sans text-xs md:text-sm font-medium"
+                >
+                  {m}m
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isVisible && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+              className="absolute top-full mt-8 flex gap-4 md:gap-8 pointer-events-auto"
+            >
+              <button onClick={handleStartPause} className="p-3 md:p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
+                {isRunning ? <Pause className="w-6 h-6 md:w-8 md:h-8" /> : <Play className="w-6 h-6 md:w-8 md:h-8" />}
               </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isVisible && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
-            className="absolute bottom-[20%] flex gap-8 pointer-events-auto"
-          >
-            <button onClick={handleStartPause} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
-              {isRunning ? <Pause size={32} /> : <Play size={32} />}
-            </button>
-            <button onClick={handleReset} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
-              <RotateCcw size={32} />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <button onClick={handleReset} className="p-3 md:p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
+                <RotateCcw className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }

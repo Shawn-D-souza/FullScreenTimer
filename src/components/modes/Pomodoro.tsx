@@ -141,42 +141,44 @@ export function Pomodoro() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
-      <div className="text-xl uppercase tracking-[0.3em] opacity-50 mb-8 font-sans font-medium">
+      <div className="text-sm md:text-xl uppercase tracking-[0.3em] opacity-50 mb-4 md:mb-8 font-sans font-medium">
         {phase === 'work' ? 'Focus' : phase === 'shortBreak' ? 'Short Break' : 'Long Break'}
       </div>
       
-      <button 
-        onClick={handleStartPause}
-        className={`text-[min(25vw,65vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
-      >
-        {formatTime(timeLeft)}
-      </button>
+      <div className="relative flex flex-col items-center justify-center w-full">
+        <button 
+          onClick={handleStartPause}
+          className={`text-[min(24vw,60vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
+        >
+          {formatTime(timeLeft)}
+        </button>
 
-      <div className="flex gap-4 mt-12 text-2xl">
+        <AnimatePresence>
+          {isVisible && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+              className="absolute top-full mt-8 flex gap-4 md:gap-8 pointer-events-auto"
+            >
+              <button onClick={handleStartPause} className="p-3 md:p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
+                {isRunning ? <Pause className="w-6 h-6 md:w-8 md:h-8" /> : <Play className="w-6 h-6 md:w-8 md:h-8" />}
+              </button>
+              <button onClick={handleReset} className="p-3 md:p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
+                <RotateCcw className="w-6 h-6 md:w-8 md:h-8" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="flex gap-2 md:gap-4 mt-8 md:mt-12 text-lg md:text-2xl">
         {Array.from({ length: pomodoroSettings.roundsBeforeLongBreak }).map((_, i) => (
           <span key={i} className={i < round ? 'opacity-100' : 'opacity-20'}>
             ●
           </span>
         ))}
       </div>
-
-      <AnimatePresence>
-        {isVisible && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
-            className="absolute bottom-[15%] flex gap-8 pointer-events-auto"
-          >
-            <button onClick={handleStartPause} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Start/Pause (Space)">
-              {isRunning ? <Pause size={32} /> : <Play size={32} />}
-            </button>
-            <button onClick={handleReset} className="p-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors" title="Reset (R)">
-              <RotateCcw size={32} />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
