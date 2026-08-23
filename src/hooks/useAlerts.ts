@@ -44,10 +44,10 @@ export function useAlerts() {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistration().then((registration) => {
           if (registration) {
-            registration.showNotification(title, { body })
+            registration.showNotification(title, { body, icon: '/pwa-192x192.png' })
           } else {
             try {
-              new Notification(title, { body })
+              new Notification(title, { body, icon: '/pwa-192x192.png' })
             } catch (e) {
               console.error('Failed to show notification', e)
             }
@@ -55,14 +55,14 @@ export function useAlerts() {
         }).catch((err) => {
           console.error('Error getting service worker registration', err)
           try {
-            new Notification(title, { body })
+            new Notification(title, { body, icon: '/pwa-192x192.png' })
           } catch (e) {
             console.error('Failed to show notification', e)
           }
         })
       } else {
         try {
-          new Notification(title, { body })
+          new Notification(title, { body, icon: '/pwa-192x192.png' })
         } catch (e) {
           console.error('Failed to show notification', e)
         }

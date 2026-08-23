@@ -129,7 +129,7 @@ export function Pomodoro() {
         sound: false,
         vibration: false,
         notificationTitle: phase === 'work' ? 'Focus Session Started' : 'Break Started',
-        notificationBody: phase === 'work' ? 'Time to focus!' : 'Take a break!',
+        notificationBody: `${formatPomodoroTime(timeLeft)} - ${phase === 'work' ? 'Time to focus!' : 'Take a break!'}`,
       })
     }
     setIsRunning(prev => !prev)

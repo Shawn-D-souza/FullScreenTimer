@@ -103,11 +103,12 @@ export function Flowmodoro() {
   const handleStartPause = () => {
     if (!isRunning) {
       requestNotificationPermission()
+      const displayTimeStr = phase === 'work' ? formatFlowmodoroTime(time) : formatFlowmodoroTime(time * 1000)
       triggerAlert({
         sound: false,
         vibration: false,
         notificationTitle: phase === 'work' ? 'Flow Started' : 'Break Started',
-        notificationBody: phase === 'work' ? 'Time to flow!' : 'Take a break!',
+        notificationBody: `${displayTimeStr} - ${phase === 'work' ? 'Time to flow!' : 'Take a break!'}`,
       })
     }
 

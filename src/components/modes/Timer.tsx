@@ -81,7 +81,7 @@ export function Timer() {
         sound: false,
         vibration: false,
         notificationTitle: 'Timer Started',
-        notificationBody: 'Timer is now running.',
+        notificationBody: `${formatTimerTime(timeLeft)} - Timer is now running.`,
       })
     }
 

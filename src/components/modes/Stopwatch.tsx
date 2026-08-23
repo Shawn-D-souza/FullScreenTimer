@@ -56,7 +56,7 @@ export function Stopwatch() {
         sound: false,
         vibration: false,
         notificationTitle: 'Stopwatch Started',
-        notificationBody: 'Stopwatch is now running.',
+        notificationBody: `${formatStopwatchTime(elapsed)} - Stopwatch is now running.`,
       })
     }
     setIsRunning(prev => !prev)
