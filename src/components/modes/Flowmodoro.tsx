@@ -46,6 +46,7 @@ export function Flowmodoro() {
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRunning, phase])
 
   // Break Phase Loop (Timer)
