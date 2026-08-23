@@ -5,19 +5,7 @@ import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
 import { useAlerts } from '../../hooks/useAlerts'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw } from 'lucide-react'
-
-function formatTime(secondsLeft: number) {
-  const hours = Math.floor(secondsLeft / 3600)
-  const minutes = Math.floor((secondsLeft % 3600) / 60)
-  const seconds = secondsLeft % 60
-
-  const parts = []
-  if (hours > 0) parts.push(hours.toString().padStart(2, '0'))
-  parts.push(minutes.toString().padStart(2, '0'))
-  parts.push(seconds.toString().padStart(2, '0'))
-
-  return parts.join(':')
-}
+import { formatTimerTime } from '../../utils/time'
 
 const PRESETS = [5, 10, 15, 25, 45]
 
@@ -82,7 +70,7 @@ export function Timer() {
 
   useEffect(() => {
     if (isActive) {
-      document.title = `${formatTime(timeLeft)} — Timer`
+      document.title = `${formatTimerTime(timeLeft)} — Timer`
     }
   }, [timeLeft, isActive])
 
@@ -124,7 +112,7 @@ export function Timer() {
           onClick={handleStartPause}
           className={`text-[min(24vw,60vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
         >
-          {formatTime(timeLeft)}
+          {formatTimerTime(timeLeft)}
         </button>
 
         <AnimatePresence>
