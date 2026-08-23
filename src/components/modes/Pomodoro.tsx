@@ -125,6 +125,12 @@ export function Pomodoro() {
   const handleStartPause = () => {
     if (!isRunning) {
       requestNotificationPermission()
+      triggerAlert({
+        sound: false,
+        vibration: false,
+        notificationTitle: phase === 'work' ? 'Focus Session Started' : 'Break Started',
+        notificationBody: phase === 'work' ? 'Time to focus!' : 'Take a break!',
+      })
     }
     setIsRunning(prev => !prev)
   }
