@@ -5,14 +5,9 @@ import { useAlerts } from '../../hooks/useAlerts'
 import { useGhostUI } from '../../hooks/useGhostUI'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw } from 'lucide-react'
+import { formatPomodoroTime } from '../../utils/time'
 
 type Phase = 'work' | 'shortBreak' | 'longBreak'
-
-function formatTime(secondsLeft: number) {
-  const minutes = Math.floor(secondsLeft / 60)
-  const seconds = secondsLeft % 60
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
 
 export function Pomodoro() {
   const { pomodoroSettings, activeMode } = useStore()
@@ -34,50 +29,6 @@ export function Pomodoro() {
   const [isRunning, setIsRunning] = useState(false)
   const endTimeRef = useRef<number | null>(null)
   const finishedRef = useRef(false)
-
-  // Handle settings change mid-flight if stopped
-  useEffect(() => {
-    if (!isRunning && timeLeft === getDuration(phase)) {
-      setTimeLeft(getDuration(phase))
-    }
-  }, [pomodoroSettings, phase, isRunning])
-
-  useEffect(() => {
-    let intervalId: number
-    
-    if (isRunning) {
-      if (!endTimeRef.current) {
-        endTimeRef.current = Date.now() + (timeLeft * 1000)
-      }
-
-      intervalId = window.setInterval(() => {
-        if (!endTimeRef.current) return
-        
-        const now = Date.now()
-        const remaining = Math.max(0, Math.ceil((endTimeRef.current - now) / 1000))
-        
-        setTimeLeft(remaining)
-
-        if (remaining === 0 && !finishedRef.current) {
-          finishedRef.current = true
-          handlePhaseEnd()
-        }
-      }, 200)
-    } else {
-      endTimeRef.current = null
-    }
-
-    return () => {
-      if (intervalId) window.clearInterval(intervalId)
-    }
-  }, [isRunning, timeLeft, phase, round, pomodoroSettings])
-
-  useEffect(() => {
-    if (isActive) {
-      const phaseName = phase === 'work' ? 'Pomodoro' : 'Break'
-      document.title = `${formatTime(timeLeft)} — ${phaseName}`
-    }
-  }, [timeLeft, isActive, phase])
 
   const handlePhaseEnd = () => {
     setIsRunning(false)
@@ -123,6 +74,59 @@ export function Pomodoro() {
     }, 1500)
   }
 
+<<<<<<< Updated upstream
+  // Handle settings change mid-flight if stopped
+  useEffect(() => {
+    if (!isRunning && timeLeft === getDuration(phase)) {
+      // It's safe to disable this lint because we want to sync the duration
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTimeLeft(getDuration(phase))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pomodoroSettings, phase, isRunning])
+
+  useEffect(() => {
+    let intervalId: number
+
+    if (isRunning) {
+      if (!endTimeRef.current) {
+        endTimeRef.current = Date.now() + (timeLeft * 1000)
+      }
+
+      intervalId = window.setInterval(() => {
+        if (!endTimeRef.current) return
+
+        const now = Date.now()
+        const remaining = Math.max(0, Math.ceil((endTimeRef.current - now) / 1000))
+
+        setTimeLeft(remaining)
+
+        if (remaining === 0 && !finishedRef.current) {
+          finishedRef.current = true
+          handlePhaseEnd()
+        }
+      }, 200)
+    } else {
+      endTimeRef.current = null
+    }
+
+    return () => {
+      if (intervalId) window.clearInterval(intervalId)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRunning, timeLeft, phase, round, pomodoroSettings])
+
+  useEffect(() => {
+    if (isActive) {
+      const phaseName = phase === 'work' ? 'Pomodoro' : 'Break'
+      document.title = `${formatPomodoroTime(timeLeft)} — ${phaseName}`
+    }
+  }, [timeLeft, isActive, phase])
+
+  const handleStartPause = () => {
+    if (!isRunning) {
+      requestNotificationPermission()
+=======
   const handleStartPause = () => {
     if (!isRunning) {
       requestNotificationPermission()
@@ -132,6 +136,7 @@ export function Pomodoro() {
         notificationTitle: phase === 'work' ? 'Pomodoro Started' : 'Break Started',
         notificationBody: phase === 'work' ? 'Focus session is running.' : 'Break session is running.',
       })
+>>>>>>> Stashed changes
     }
     setIsRunning(prev => !prev)
   }
@@ -161,7 +166,7 @@ export function Pomodoro() {
           onClick={handleStartPause}
           className={`text-[min(24vw,60vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
         >
-          {formatTime(timeLeft)}
+          {formatPomodoroTime(timeLeft)}
         </button>
 
         <AnimatePresence>

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useStore } from '../store/useStore'
 
 interface ShortcutHandlers {
@@ -13,6 +13,12 @@ interface ShortcutHandlers {
 export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
   const { toggleTheme, activeMode, enabledModes, setActiveMode } = useStore()
   
+  const handlersRef = useRef(handlers)
+
+  useEffect(() => {
+    handlersRef.current = handlers
+  }, [handlers])
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger shortcuts if user is typing in an input field
@@ -23,36 +29,36 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
       switch (e.key) {
         case ' ':
           e.preventDefault() // prevent page scroll
-          handlers.onSpace?.()
+          handlersRef.current.onSpace?.()
           break
         case 'r':
         case 'R':
-          handlers.onR?.()
+          handlersRef.current.onR?.()
           break
         case 'l':
         case 'L':
-          handlers.onL?.()
+          handlersRef.current.onL?.()
           break
         case 's':
         case 'S':
-          handlers.onS?.()
+          handlersRef.current.onS?.()
           break
         case '?':
-          handlers.onQuestion?.()
+          handlersRef.current.onQuestion?.()
           break
         case 'f':
         case 'F':
-          handlers.onF?.()
+          handlersRef.current.onF?.()
           break
         case 'd':
         case 'D':
           toggleTheme()
           break
-        case 'Tab':
+        case 'Tab': {
           e.preventDefault()
           if (enabledModes.length === 0) return
           const currentIndex = enabledModes.indexOf(activeMode)
-          let nextIndex = currentIndex
+          let nextIndex
           if (e.shiftKey) {
             nextIndex = (currentIndex - 1 + enabledModes.length) % enabledModes.length
           } else {
@@ -60,10 +66,11 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
           }
           setActiveMode(enabledModes[nextIndex])
           break
+        }
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [handlers, activeMode, enabledModes, setActiveMode, toggleTheme])
+  }, [activeMode, enabledModes, setActiveMode, toggleTheme])
 }
