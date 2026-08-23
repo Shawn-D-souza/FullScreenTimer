@@ -30,50 +30,6 @@ export function Pomodoro() {
   const endTimeRef = useRef<number | null>(null)
   const finishedRef = useRef(false)
 
-  // Handle settings change mid-flight if stopped
-  useEffect(() => {
-    if (!isRunning && timeLeft === getDuration(phase)) {
-      setTimeLeft(getDuration(phase))
-    }
-  }, [pomodoroSettings, phase, isRunning])
-
-  useEffect(() => {
-    let intervalId: number
-    
-    if (isRunning) {
-      if (!endTimeRef.current) {
-        endTimeRef.current = Date.now() + (timeLeft * 1000)
-      }
-
-      intervalId = window.setInterval(() => {
-        if (!endTimeRef.current) return
-        
-        const now = Date.now()
-        const remaining = Math.max(0, Math.ceil((endTimeRef.current - now) / 1000))
-        
-        setTimeLeft(remaining)
-
-        if (remaining === 0 && !finishedRef.current) {
-          finishedRef.current = true
-          handlePhaseEnd()
-        }
-      }, 200)
-    } else {
-      endTimeRef.current = null
-    }
-
-    return () => {
-      if (intervalId) window.clearInterval(intervalId)
-    }
-  }, [isRunning, timeLeft, phase, round, pomodoroSettings])
-
-  useEffect(() => {
-    if (isActive) {
-      const phaseName = phase === 'work' ? 'Pomodoro' : 'Break'
-      document.title = `${formatPomodoroTime(timeLeft)} — ${phaseName}`
-    }
-  }, [timeLeft, isActive, phase])
-
   const handlePhaseEnd = () => {
     setIsRunning(false)
     endTimeRef.current = null
@@ -117,6 +73,54 @@ export function Pomodoro() {
       }
     }, 1500)
   }
+
+  // Handle settings change mid-flight if stopped
+  useEffect(() => {
+    if (!isRunning && timeLeft === getDuration(phase)) {
+      // It's safe to disable this lint because we want to sync the duration
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTimeLeft(getDuration(phase))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pomodoroSettings, phase, isRunning])
+
+  useEffect(() => {
+    let intervalId: number
+
+    if (isRunning) {
+      if (!endTimeRef.current) {
+        endTimeRef.current = Date.now() + (timeLeft * 1000)
+      }
+
+      intervalId = window.setInterval(() => {
+        if (!endTimeRef.current) return
+
+        const now = Date.now()
+        const remaining = Math.max(0, Math.ceil((endTimeRef.current - now) / 1000))
+
+        setTimeLeft(remaining)
+
+        if (remaining === 0 && !finishedRef.current) {
+          finishedRef.current = true
+          handlePhaseEnd()
+        }
+      }, 200)
+    } else {
+      endTimeRef.current = null
+    }
+
+    return () => {
+      if (intervalId) window.clearInterval(intervalId)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRunning, timeLeft, phase, round, pomodoroSettings])
+
+  useEffect(() => {
+    if (isActive) {
+      const phaseName = phase === 'work' ? 'Pomodoro' : 'Break'
+      document.title = `${formatPomodoroTime(timeLeft)} — ${phaseName}`
+    }
+  }, [timeLeft, isActive, phase])
 
   const handleStartPause = () => {
     if (!isRunning) {
