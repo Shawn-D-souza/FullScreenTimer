@@ -4,22 +4,7 @@ import { useGhostUI } from '../../hooks/useGhostUI'
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw, Flag } from 'lucide-react'
-
-// ... existing formatTime ...
-function formatTime(ms: number) {
-  const totalSeconds = Math.floor(ms / 1000)
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  const centiseconds = Math.floor((ms % 1000) / 10)
-
-  const parts = []
-  if (hours > 0) parts.push(hours.toString().padStart(2, '0'))
-  parts.push(minutes.toString().padStart(2, '0'))
-  parts.push(seconds.toString().padStart(2, '0'))
-
-  return `${parts.join(':')}.${centiseconds.toString().padStart(2, '0')}`
-}
+import { formatStopwatchTime } from '../../utils/time'
 
 export function Stopwatch() {
   const [isRunning, setIsRunning] = useState(false)
@@ -57,7 +42,7 @@ export function Stopwatch() {
   useEffect(() => {
     // Update document title
     if (isActive) {
-      document.title = `${formatTime(elapsed)} — Stopwatch`
+      document.title = `${formatStopwatchTime(elapsed)} — Stopwatch`
     }
   }, [elapsed, isActive])
 
@@ -87,7 +72,7 @@ export function Stopwatch() {
           onClick={handleStartPause}
           className="text-[min(14vw,55vh)] leading-none font-bold tracking-tighter tabular-nums z-10 outline-none hover:opacity-80"
         >
-          {formatTime(elapsed)}
+          {formatStopwatchTime(elapsed)}
         </button>
 
         <AnimatePresence>
@@ -125,8 +110,8 @@ export function Stopwatch() {
               return (
                 <div key={index} className="flex justify-between text-sm md:text-xl py-2 border-b border-black/10 dark:border-white/10 last:border-0 tabular-nums">
                   <span className="opacity-50">Lap {laps.length - index}</span>
-                  <span>{formatTime(lapDiff)}</span>
-                  <span className="opacity-50">{formatTime(lap)}</span>
+                  <span>{formatStopwatchTime(lapDiff)}</span>
+                  <span className="opacity-50">{formatStopwatchTime(lap)}</span>
                 </div>
               )
             })}

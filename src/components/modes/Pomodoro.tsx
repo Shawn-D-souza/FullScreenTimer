@@ -5,14 +5,9 @@ import { useAlerts } from '../../hooks/useAlerts'
 import { useGhostUI } from '../../hooks/useGhostUI'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw } from 'lucide-react'
+import { formatPomodoroTime } from '../../utils/time'
 
 type Phase = 'work' | 'shortBreak' | 'longBreak'
-
-function formatTime(secondsLeft: number) {
-  const minutes = Math.floor(secondsLeft / 60)
-  const seconds = secondsLeft % 60
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
 
 export function Pomodoro() {
   const { pomodoroSettings, activeMode } = useStore()
@@ -75,7 +70,7 @@ export function Pomodoro() {
   useEffect(() => {
     if (isActive) {
       const phaseName = phase === 'work' ? 'Pomodoro' : 'Break'
-      document.title = `${formatTime(timeLeft)} — ${phaseName}`
+      document.title = `${formatPomodoroTime(timeLeft)} — ${phaseName}`
     }
   }, [timeLeft, isActive, phase])
 
@@ -150,7 +145,7 @@ export function Pomodoro() {
           onClick={handleStartPause}
           className={`text-[min(24vw,60vh)] leading-none font-bold tracking-tighter tabular-nums transition-opacity duration-200 outline-none hover:opacity-80 ${timeLeft === 0 ? 'opacity-20' : 'opacity-100'}`}
         >
-          {formatTime(timeLeft)}
+          {formatPomodoroTime(timeLeft)}
         </button>
 
         <AnimatePresence>

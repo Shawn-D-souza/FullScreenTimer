@@ -5,22 +5,9 @@ import { useAlerts } from '../../hooks/useAlerts'
 import { useGhostUI } from '../../hooks/useGhostUI'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw } from 'lucide-react'
+import { formatFlowmodoroTime } from '../../utils/time'
 
 type Phase = 'work' | 'break'
-
-function formatTime(ms: number) {
-  const totalSeconds = Math.max(0, Math.ceil(ms / 1000))
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-
-  const parts = []
-  if (hours > 0) parts.push(hours.toString().padStart(2, '0'))
-  parts.push(minutes.toString().padStart(2, '0'))
-  parts.push(seconds.toString().padStart(2, '0'))
-
-  return parts.join(':')
-}
 
 export function Flowmodoro() {
   const { activeMode, flowmodoroSettings } = useStore()
@@ -107,7 +94,7 @@ export function Flowmodoro() {
 
   useEffect(() => {
     if (isActive) {
-      const formatted = phase === 'work' ? formatTime(time) : formatTime(time * 1000)
+      const formatted = phase === 'work' ? formatFlowmodoroTime(time) : formatFlowmodoroTime(time * 1000)
       document.title = `${formatted} — ${phase === 'work' ? 'Flow' : 'Break'}`
     }
   }, [time, isActive, phase])
@@ -142,7 +129,7 @@ export function Flowmodoro() {
     onR: isActive ? handleReset : undefined,
   })
 
-  const displayTime = phase === 'work' ? formatTime(time) : formatTime(time * 1000)
+  const displayTime = phase === 'work' ? formatFlowmodoroTime(time) : formatFlowmodoroTime(time * 1000)
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full font-mono relative">
