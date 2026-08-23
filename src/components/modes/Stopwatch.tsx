@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useStore } from '../../store/useStore'
 import { useGhostUI } from '../../hooks/useGhostUI'
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts'
+import { useAlerts } from '../../hooks/useAlerts'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Play, Pause, RotateCcw, Flag } from 'lucide-react'
 import { formatStopwatchTime } from '../../utils/time'
@@ -15,6 +16,7 @@ export function Stopwatch() {
   
   const { isVisible } = useGhostUI()
   const { activeMode } = useStore()
+  const { triggerAlert, requestNotificationPermission } = useAlerts()
 
   const isActive = activeMode === 'Stopwatch'
 
@@ -47,7 +49,18 @@ export function Stopwatch() {
     }
   }, [elapsed, isActive])
 
-  const handleStartPause = () => setIsRunning(prev => !prev)
+  const handleStartPause = () => {
+    if (!isRunning) {
+      requestNotificationPermission()
+      triggerAlert({
+        sound: false,
+        vibration: false,
+        notificationTitle: 'Stopwatch Started',
+        notificationBody: 'Stopwatch is now running.',
+      })
+    }
+    setIsRunning(prev => !prev)
+  }
   const handleReset = () => {
     setIsRunning(false)
     setElapsed(0)

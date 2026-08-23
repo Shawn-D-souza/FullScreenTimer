@@ -77,6 +77,12 @@ export function Timer() {
   const handleStartPause = () => {
     if (!isRunning) {
       requestNotificationPermission()
+      triggerAlert({
+        sound: false,
+        vibration: false,
+        notificationTitle: 'Timer Started',
+        notificationBody: 'Timer is now running.',
+      })
     }
 
     if (timeLeft === 0 && !isRunning) {
