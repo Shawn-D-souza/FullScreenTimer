@@ -41,7 +41,32 @@ export function useAlerts() {
     if (!('Notification' in window)) return
     
     if (Notification.permission === 'granted') {
-      new Notification(title, { body })
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then((registration) => {
+          if (registration) {
+            registration.showNotification(title, { body })
+          } else {
+            try {
+              new Notification(title, { body })
+            } catch (e) {
+              console.error('Failed to show notification', e)
+            }
+          }
+        }).catch((err) => {
+          console.error('Error getting service worker registration', err)
+          try {
+            new Notification(title, { body })
+          } catch (e) {
+            console.error('Failed to show notification', e)
+          }
+        })
+      } else {
+        try {
+          new Notification(title, { body })
+        } catch (e) {
+          console.error('Failed to show notification', e)
+        }
+      }
     }
   }, [globalMute])
 
