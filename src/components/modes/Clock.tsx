@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useStore } from '../../store/useStore'
 
 export function Clock() {
@@ -12,12 +12,12 @@ export function Clock() {
     return () => clearInterval(interval)
   }, [])
 
-  const formatter = new Intl.DateTimeFormat('en-US', {
+  const formatter = useMemo(() => new Intl.DateTimeFormat('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     second: clockSettings.showSeconds ? '2-digit' : undefined,
     hour12: !clockSettings.use24Hour,
-  })
+  }), [clockSettings.showSeconds, clockSettings.use24Hour])
 
   // We only want the time string, not the AM/PM part necessarily, or maybe we do want AM/PM but smaller.
   // The minimalist way is to just display it exactly as formatted.
