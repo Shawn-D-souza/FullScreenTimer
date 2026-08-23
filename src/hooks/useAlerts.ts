@@ -44,6 +44,12 @@ export function useAlerts() {
     }
   }, [globalMute])
 
+  const requestNotificationPermission = useCallback(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission()
+    }
+  }, [])
+
   const triggerAlert = useCallback(({ 
     sound = true, 
     vibration = true, 
@@ -64,5 +70,5 @@ export function useAlerts() {
     }
   }, [playSound, triggerVibration, showNotification])
 
-  return { triggerAlert, playSound, triggerVibration, showNotification }
+  return { triggerAlert, playSound, triggerVibration, showNotification, requestNotificationPermission }
 }

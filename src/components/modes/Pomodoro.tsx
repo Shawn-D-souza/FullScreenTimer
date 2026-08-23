@@ -16,7 +16,7 @@ function formatTime(secondsLeft: number) {
 
 export function Pomodoro() {
   const { pomodoroSettings, activeMode } = useStore()
-  const { triggerAlert } = useAlerts()
+  const { triggerAlert, requestNotificationPermission } = useAlerts()
   const { isVisible } = useGhostUI()
   
   const isActive = activeMode === 'Pomodoro'
@@ -123,7 +123,12 @@ export function Pomodoro() {
     }, 1500)
   }
 
-  const handleStartPause = () => setIsRunning(prev => !prev)
+  const handleStartPause = () => {
+    if (!isRunning) {
+      requestNotificationPermission()
+    }
+    setIsRunning(prev => !prev)
+  }
 
   const handleReset = () => {
     setIsRunning(false)
