@@ -24,7 +24,7 @@ function formatTime(ms: number) {
 
 export function Flowmodoro() {
   const { activeMode, flowmodoroSettings } = useStore()
-  const { triggerAlert } = useAlerts()
+  const { triggerAlert, requestNotificationPermission } = useAlerts()
   const { isVisible } = useGhostUI()
   const isActive = activeMode === 'Flowmodoro'
 
@@ -113,6 +113,16 @@ export function Flowmodoro() {
   }, [time, isActive, phase])
 
   const handleStartPause = () => {
+    if (!isRunning) {
+      requestNotificationPermission()
+      triggerAlert({
+        sound: false,
+        vibration: false,
+        notificationTitle: phase === 'work' ? 'Flowmodoro Started' : 'Break Started',
+        notificationBody: phase === 'work' ? 'Flow session is running.' : 'Break session is running.',
+      })
+    }
+
     if (phase === 'work' && isRunning) {
       // Stopping work means we calculate break and switch to break phase automatically.
       setIsRunning(false)

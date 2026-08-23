@@ -24,7 +24,7 @@ const PRESETS = [5, 10, 15, 25, 45]
 export function Timer() {
   const { timerSettings, activeMode } = useStore()
   const { isVisible } = useGhostUI()
-  const { triggerAlert } = useAlerts()
+  const { triggerAlert, requestNotificationPermission } = useAlerts()
   
   const isActive = activeMode === 'Timer'
 
@@ -87,6 +87,16 @@ export function Timer() {
   }, [timeLeft, isActive])
 
   const handleStartPause = () => {
+    if (!isRunning) {
+      requestNotificationPermission()
+      triggerAlert({
+        sound: false,
+        vibration: false,
+        notificationTitle: 'Timer Started',
+        notificationBody: `Timer running for ${formatTime(timeLeft === 0 ? timerSettings.defaultDurationMinutes * 60 : timeLeft)}.`,
+      })
+    }
+
     if (timeLeft === 0 && !isRunning) {
       // reset if trying to start from 0
       handleReset()
