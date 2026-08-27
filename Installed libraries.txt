@@ -1,0 +1,25 @@
+tailwind
+
+zustand
+Selector-level subscriptions plus the persist middleware for localStorage, including version/migrate for settings that live in users' browsers across releases. React Context would re-render the whole tree on every tick.
+
+immer
+Used via zustand/middleware/immer. The settings tree is deeply nested — each of 5 modes carries its own sound/volume/vibration/notification profile — so this turns a nested update into set(s => { s.pomodoro.work = 30 }).
+
+zod
+One schema is the single source of truth for the settings type, the defaults, and runtime validation of the rehydrated blob — so a stale or hand-edited value can't crash a tool people leave open for hours. zod/mini if bundle size bites.
+
+clsx + tailwind-merge
+The standard cn() helper. ~1KB combined.
+
+radix-ui
+Unstyled Dialog (settings overlay: focus trap, Escape, aria-modal, scroll lock), Switch (~15 toggles), Slider (per-mode volume), Tabs, RadioGroup. Unstyled keeps the B&W aesthetic untouched; using it means not hand-rolling focus management in an app that deliberately overrides the keyboard. Enum pickers stay as styled native <select> — cheaper and already accessible.
+
+lucide-react
+~6 icons total (gear, volume-x, chevron-up/down, x, check), tree-shaken so only those ship. Geometric strokes suit the Braun reference.
+
+react-hotkeys-hook
+Declarative bindings with preventDefault, scopes, and automatic ignoring of form inputs — essential, since settings has number fields. Bindings become data, making post-MVP rebinding a config change rather than a rewrite.
+
+@fontsource-variable/inter
+Self-hosting is required for genuine offline; a Google Fonts <link> breaks the offline promise. One variable file covers hero and chrome, with proper tabular figures via Tailwind's tabular-nums — a hard requirement in the design doc so the layout never jitters.
