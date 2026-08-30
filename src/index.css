@@ -1,1 +1,276 @@
-@import "tailwindcss";   
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+ * Typeface. Self-hosted — a Google Fonts link would break the offline promise.
+ * Only the two Latin subsets are declared: everything this app renders is
+ * Latin text and digits, so the other seven subsets are dead weight in the
+ * offline cache.
+ * ------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2')
+    format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---------------------------------------------------------------------------
+ * Design tokens. Two colours, no greys — every colour utility resolves through
+ * --fst-ink / --fst-paper, which the theme attribute swaps.
+ * ------------------------------------------------------------------------- */
+@theme {
+  --color-ink: var(--fst-ink);
+  --color-paper: var(--fst-paper);
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --default-font-family: var(--font-sans);
+
+  /* Slow, luxurious ease for the ghost UI's materialisation. */
+  --ease-ghost: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-precise: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --animate-tip-in: tip-in 420ms var(--ease-ghost) both;
+  --animate-overlay-in: overlay-in 260ms var(--ease-precise) both;
+  --animate-panel-in: panel-in 320ms var(--ease-ghost) both;
+  --animate-flash: flash 900ms var(--ease-precise) 3;
+
+  @keyframes tip-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes overlay-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.995);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes flash {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.15;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    --fst-ink: #ffffff;
+    --fst-paper: #000000;
+    --hero-weight: 450;
+
+    /* Overridden by [data-scale]; medium is the default. */
+    --hero-fill: 0.8;
+    --hero-vfill: 0.3;
+
+    color-scheme: dark;
+  }
+
+  html[data-theme='light'] {
+    --fst-ink: #000000;
+    --fst-paper: #ffffff;
+    /* Black on white reads lighter than white on black, so add weight back. */
+    --hero-weight: 500;
+    color-scheme: light;
+  }
+
+  html[data-scale='small'] {
+    --hero-fill: 0.58;
+    --hero-vfill: 0.21;
+  }
+  html[data-scale='medium'] {
+    --hero-fill: 0.8;
+    --hero-vfill: 0.3;
+  }
+  html[data-scale='large'] {
+    --hero-fill: 0.92;
+    --hero-vfill: 0.38;
+  }
+  html[data-scale='huge'] {
+    --hero-fill: 1;
+    --hero-vfill: 0.46;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--fst-paper);
+    color: var(--fst-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  input,
+  textarea,
+  [contenteditable] {
+    user-select: text;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /*
+   * General → hide the cursor when idle. Set on <html> alongside the chrome
+   * fading out, so the pointer disappears with the interface rather than
+   * hovering over an empty screen.
+   */
+  html[data-cursor='hidden'],
+  html[data-cursor='hidden'] * {
+    cursor: none;
+  }
+
+  ::selection {
+    background-color: var(--fst-ink);
+    color: var(--fst-paper);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--fst-ink);
+    outline-offset: 4px;
+  }
+
+  /* Keyboard-first app: pointer focus should never leave a ring behind. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Native controls inherit the palette instead of the OS accent colour. */
+  select,
+  input {
+    color: inherit;
+    font: inherit;
+  }
+
+  select option {
+    background-color: var(--fst-paper);
+    color: var(--fst-ink);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Utilities
+ * ------------------------------------------------------------------------- */
+
+/*
+ * The hero display. --hero-em is the string's width in em units, measured from
+ * the glyph metrics of Inter's tabular figures, so the size is derived rather
+ * than guessed and the digits can never overflow or reflow mid-tick.
+ */
+@utility hero-digits {
+  font-size: min(
+    calc(100svw * var(--hero-fill) / var(--hero-em, 6)),
+    calc(100svh * var(--hero-vfill))
+  );
+  font-weight: var(--hero-weight);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+  line-height: 0.84;
+  white-space: nowrap;
+  font-feature-settings: 'ss01' 1;
+}
+
+/* The ghost UI's voice: small, spaced, unmistakably a caption. */
+@utility chrome-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+@utility chrome-label-sm {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+@utility scroll-quiet {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--fst-ink) 30%, transparent) transparent;
+
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--fst-ink) 30%, transparent);
+  }
+}
+
+/* Hairline rules for the settings overlay's blueprint layout. */
+@utility rule-b {
+  border-bottom: 1px solid color-mix(in oklab, var(--fst-ink) 14%, transparent);
+}
+
+@utility rule-t {
+  border-top: 1px solid color-mix(in oklab, var(--fst-ink) 14%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

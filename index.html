@@ -1,10 +1,43 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fullscreentimer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>FullScreenTimer</title>
+    <meta
+      name="description"
+      content="A fullscreen, black-and-white, distraction-free clock, stopwatch, timer, pomodoro and flowmodoro. No account, no ads, works offline."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="FullScreenTimer" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
+    <!-- Apply the persisted theme before first paint so the app never flashes the wrong colour. -->
+    <script>
+      (function () {
+        var theme = 'dark'
+        try {
+          var raw = localStorage.getItem('fst:settings')
+          if (raw) {
+            var stored = JSON.parse(raw)
+            var candidate = stored && stored.state && stored.state.general && stored.state.general.theme
+            if (candidate === 'light' || candidate === 'dark') theme = candidate
+          }
+        } catch (err) {
+          /* corrupt storage — fall through to the default */
+        }
+        var root = document.documentElement
+        root.setAttribute('data-theme', theme)
+        var meta = document.querySelector('meta[name="theme-color"]')
+        if (meta) meta.setAttribute('content', theme === 'light' ? '#ffffff' : '#000000')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
